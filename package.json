@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "@libsql/client": "^0.15.11",
+    "@tanstack/react-query": "^5.87.1",
+    "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
     "next": "15.4.6",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
