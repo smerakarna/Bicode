@@ -6,6 +6,10 @@ import {
   useCallback,
   useState,
 } from "react";
+import {
+  useMutation
+} from '@tanstack/react-query'
+import { redirect } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -22,16 +26,22 @@ export default function Login() {
     []
   );
 
+  const mutation = useMutation({
+    mutationFn: async (data: { email: string; password: string }) => {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      })
+      return response.json();
+    }
+  })
+
   const onSubmit: FormEventHandler<HTMLFormElement> = useCallback(
     async (event) => {
       event.preventDefault();
-      const response = await fetch("/api/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      console.log(data);
+      await mutation.mutate({ email, password })
+      redirect('/start')
     },
     [email, password]
   );
@@ -62,6 +72,10 @@ export default function Login() {
             Submit
           </button>
         </form>
+        <p>
+          {mutation.isError && mutation.error.message}
+        </p>
+
       </main>
     </div>
   );

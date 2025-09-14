@@ -42,9 +42,6 @@ export default function Register() {
       // If the response was not ok, throw an error
       if (!response.ok) throw new Error("Failed to register user");
     },
-    onSuccess: () => {
-      redirect('/start')
-    }
   })
 
   // onSubmit is called when the <form> element calls onSubmit, which is when the user clicks the submit button
@@ -53,6 +50,8 @@ export default function Register() {
     event.preventDefault();
     // Trigger the registration mutation
     mutation.mutate({ email, password })
+    redirect('/start')
+
     // Dependency array for useCallback()
   }, [email, password, mutation])
 
@@ -82,9 +81,9 @@ export default function Register() {
             Submit
           </button>
         </form>
-        <div>
+        <p>
           {mutation.isError && <p>{mutation.error.message}</p>}
-        </div>
+        </p>
 
       </main>
     </div>

@@ -38,25 +38,25 @@ const StartPage: React.FC = () => {
                     </p>
                     <div className="grid md:grid-cols-2 gap-4 mt-4">
                         <Link
-                            href="/courses/math"
+                            href="https://drive.google.com/drive/folders/1yr9rxjgxWupMhfVm333vNiDYwtdHOWYt?usp=sharing"
                             className="block p-4 bg-gray-100 border rounded-md hover:shadow-md transition"
                         >
                             📘 Math Resources
                         </Link>
                         <Link
-                            href="/courses/science"
+                            href="https://drive.google.com/drive/folders/1lpg2N4iOZeLPESccuSyYqeCXsE7djjGS?usp=sharing"
                             className="block p-4 bg-gray-100 border rounded-md hover:shadow-md transition"
                         >
                             🔬 Science Resources
                         </Link>
                         <Link
-                            href="/courses/english"
+                            href="https://drive.google.com/drive/folders/1JQ-R92Dc7-kF-l5ystytrpu6xNMYksMg?usp=sharing"
                             className="block p-4 bg-gray-100 border rounded-md hover:shadow-md transition"
                         >
                             ✍️ English Resources
                         </Link>
                         <Link
-                            href="/courses/history"
+                            href="https://drive.google.com/drive/folders/1-V2VpXxyVoa3UAw1eJOyWLSmHP4SRciG?usp=sharing"
                             className="block p-4 bg-gray-100 border rounded-md hover:shadow-md transition"
                         >
                             📜 History Resources

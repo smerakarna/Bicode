@@ -36,6 +36,7 @@ export const POST = async (request: NextRequest) => {
     .insert(db._.fullSchema.usersTable).values({
       email, passwordHash: hash
     })
+
   // if everything goes okay, return a 200 response
   return new Response(
     JSON.stringify({
