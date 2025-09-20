@@ -1,19 +1,23 @@
 "use client";
 
+import { useAuth } from "@/auth";
+import { useMutation } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
 import {
   ChangeEventHandler,
   FormEventHandler,
   useCallback,
   useState,
 } from "react";
-import {
-  useMutation
-} from '@tanstack/react-query'
-import { redirect } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [auth, setAuth] = useAuth();
+
+  if (auth.jwt) {
+    redirect("/start");
+  }
 
   const onChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
@@ -28,20 +32,26 @@ export default function Login() {
 
   const mutation = useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
-      const response = await fetch('/api/login', {
-        method: 'POST',
+      const response = await fetch("/api/login", {
+        method: "POST",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" },
-      })
-      return response.json();
-    }
-  })
+      });
+      return response.json() as Promise<{ token: string }>;
+    },
+  });
 
   const onSubmit: FormEventHandler<HTMLFormElement> = useCallback(
     async (event) => {
       event.preventDefault();
-      await mutation.mutate({ email, password })
-      redirect('/start')
+      mutation.mutate(
+        { email, password },
+        {
+          onSuccess: (data) => {
+            setAuth({ jwt: data.token });
+          },
+        }
+      );
     },
     [email, password]
   );
@@ -72,10 +82,7 @@ export default function Login() {
             Submit
           </button>
         </form>
-        <p>
-          {mutation.isError && mutation.error.message}
-        </p>
-
+        <p>{mutation.isError && mutation.error.message}</p>
       </main>
     </div>
   );
