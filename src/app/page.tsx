@@ -1,5 +1,16 @@
+"use client";
+
+import { useAuth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default function Home() {
+  const authContext = useAuth();
+  const [auth] = authContext;
+
+  if (auth.jwt) {
+    redirect("/start");
+  }
+
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <p className="text-3xl font-bold mb-6">Bicode</p>
