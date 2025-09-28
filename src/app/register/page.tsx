@@ -8,12 +8,17 @@ import {
   useState,
 } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/auth";
 
 export default function Register() {
-  // Email state
   const [email, setEmail] = useState("");
-  // Password state
   const [password, setPassword] = useState("");
+  const [auth, setAuth] = useAuth();
+
+  console.log("Auth state:", auth);
+  if (auth.jwt) {
+    redirect("/start");
+  }
 
   // onChange is called when either input calls its onChange, which is when the user types into the search bar
   const onChange: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -32,7 +37,7 @@ export default function Register() {
   // A mutation is when you change the state of the application
   const mutation = useMutation({
     // This mutationFn takes in 1 param, "data" of type {email: string, password: string}
-    mutationFn: async (data: { email: string, password: string }) => {
+    mutationFn: async (data: { email: string; password: string }) => {
       // Fetch /api/register with the data to create the user
       const response = await fetch("/api/register", {
         method: "POST",
@@ -41,19 +46,29 @@ export default function Register() {
       });
       // If the response was not ok, throw an error
       if (!response.ok) throw new Error("Failed to register user");
+      return response.json() as Promise<{ token: string }>;
     },
-  })
+  });
 
   // onSubmit is called when the <form> element calls onSubmit, which is when the user clicks the submit button
-  const onSubmit: FormEventHandler<HTMLFormElement> = useCallback((event) => {
-    // Prevent refreshing of the page
-    event.preventDefault();
-    // Trigger the registration mutation
-    mutation.mutate({ email, password })
-    redirect('/start')
+  const onSubmit: FormEventHandler<HTMLFormElement> = useCallback(
+    (event) => {
+      // Prevent refreshing of the page
+      event.preventDefault();
+      // Trigger the registration mutation
+      mutation.mutate(
+        { email, password },
+        {
+          onSuccess: (data) => {
+            setAuth({ jwt: data.token });
+          },
+        }
+      );
 
-    // Dependency array for useCallback()
-  }, [email, password, mutation])
+      // Dependency array for useCallback()
+    },
+    [email, password, mutation]
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-800 flex items-center justify-center">
@@ -81,10 +96,7 @@ export default function Register() {
             Submit
           </button>
         </form>
-        <p>
-          {mutation.isError && <p>{mutation.error.message}</p>}
-        </p>
-
+        <p>{mutation.isError && <p>{mutation.error.message}</p>}</p>
       </main>
     </div>
   );
