@@ -1,5 +1,5 @@
 import { signAuthToken } from "@/auth/jwt";
-import { db } from "@/db/client";
+import { findUsers } from '@/db/sdk'
 import bcrypt from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { NextRequest } from "next/server";
@@ -18,11 +18,10 @@ export const POST = async (request: NextRequest) => {
 
   // Check if the email is already in the database
   // First get the user from the database
-  const userMaybe = await db.query.usersTable.findFirst({
-    where: (users, { eq }) => eq(users.email, email),
-  });
+  const { collection } = 
+  const userMaybe = findUsers()
 
-  // If the user exists, return a 409 sstatus code
+  // If the user exists, return a 409 status code
   if (userMaybe) {
     return new Response(
       JSON.stringify({ error: "Email already exists: " + userMaybe.email }),

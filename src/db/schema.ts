@@ -8,3 +8,10 @@ export const usersTable = sqliteTable("users", {
   email: text().notNull().unique(),
   passwordHash: text().notNull()
 });
+
+export const commentsTable = sqliteTable("comments", {
+  commenterName: text(),
+  commentsDate: text(),
+  text: text(),
+  topic: text(),
+})

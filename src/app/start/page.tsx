@@ -21,12 +21,16 @@ const StartPage: React.FC = protectedRoute(() => {
             guides, FAQs, and reach out to support whenever you need assistance.
             We’re here to help you succeed.
           </p>
-          <Link
+          {/* <Link
             href="/help"
             className="inline-block mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
           >
             Visit Help Center
-          </Link>
+          </Link> */}
+          <p>
+            If you are having trouble please email Bicode1101@gmail.com for help.
+          </p>
+
         </section>
 
         <section className="mb-8">
