@@ -1,7 +1,7 @@
 import { signAuthToken } from "@/auth/jwt";
-import { findUsers } from '@/db/sdk'
+import { findUsers, insertUser } from "@/db/sdk";
+import { db } from "@/db/client";
 import bcrypt from "bcryptjs";
-import { sign } from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -18,8 +18,7 @@ export const POST = async (request: NextRequest) => {
 
   // Check if the email is already in the database
   // First get the user from the database
-  const { collection } = 
-  const userMaybe = findUsers()
+  const [userMaybe] = await findUsers(db, { email });
 
   // If the user exists, return a 409 status code
   if (userMaybe) {
@@ -33,10 +32,7 @@ export const POST = async (request: NextRequest) => {
   const hash = bcrypt.hashSync(password, 10);
   console.log("Registering user:", { email });
   // insert the user into the database
-  await db.insert(db._.fullSchema.usersTable).values({
-    email,
-    passwordHash: hash,
-  });
+  await insertUser(db, { email, passwordHash: hash });
 
   // if everything goes okay, return a 200 response
   const accessToken = signAuthToken(email);
