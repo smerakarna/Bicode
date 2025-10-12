@@ -25,9 +25,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const jwt = localStorage.getItem("jwt");
-      if (jwt) {
-        baseSetAuthContextValue({ jwt });
+      if (!jwt) {
+        return;
       }
+
+      // Verify jwt on the server
+      // Prevents "I thought I was logged in but my token is expired" or such
+      const response = fetch("/api/whoami", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      }).then((res) => {
+        if (res.status === 200) {
+          baseSetAuthContextValue({ jwt });
+        } else {
+          localStorage.removeItem("jwt");
+          baseSetAuthContextValue({});
+        }
+      });
+
+      baseSetAuthContextValue({ jwt });
     }
   }, []);
 

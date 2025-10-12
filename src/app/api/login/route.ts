@@ -3,6 +3,7 @@ import { db } from "@/db/client";
 import bcrypt from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { signAuthToken } from "@/auth/jwt";
+import { findUsers } from "@/db/sdk";
 
 export const POST = async (request: NextRequest) => {
   // get the email and password from the request
@@ -17,9 +18,8 @@ export const POST = async (request: NextRequest) => {
   }
 
   // Get the user's current password (hash)
-  const user = await db.query.usersTable.findFirst({
-    where: (users, { eq }) => eq(users.email, email),
-  });
+  const [user] = await findUsers(db, { email });
+
   // If there's no user, 401
   if (!user) {
     return new Response(
