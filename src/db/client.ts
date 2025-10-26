@@ -5,7 +5,12 @@ import { MongoClient } from "mongodb";
 if (!process.env.MONGO_URL) {
   throw new Error("Missing MONGO_URL");
 }
-const client = new MongoClient(process.env.MONGO_URL);
-await client.connect();
-export const db = client.db("bicode");
-export { client };
+
+const mongoUrl = process.env.MONGO_URL;
+
+export const connect = async () => {
+  const client = new MongoClient(mongoUrl);
+  await client.connect();
+  const db = client.db("bicode");
+  return { client, db }
+}

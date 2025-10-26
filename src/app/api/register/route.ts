@@ -1,10 +1,11 @@
 import { signAuthToken } from "@/auth/jwt";
 import { findUsers, insertUser } from "@/db/sdk";
-import { db } from "@/db/client";
+import { connect } from "@/db/client";
 import bcrypt from "bcryptjs";
 import { NextRequest } from "next/server";
 
 export const POST = async (request: NextRequest) => {
+  const { db } = await connect();
   // get the email and password from the request
   const { email, password } = await request.json();
 

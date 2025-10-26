@@ -1,9 +1,10 @@
 import { verifyAuthToken } from "@/auth/jwt";
-import { db } from "@/db/client";
+import { connect } from "@/db/client";
 import { findUsers } from "@/db/sdk";
 import { NextRequest } from "next/server";
 
 export const POST = async (request: NextRequest) => {
+  const { db } = await connect();
   // Typically, whoami endpoints check the request's authorization header
   // for a JWT or session cookie to identify the user.
 
